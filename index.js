@@ -13,7 +13,7 @@ const Port_scanner_url = 'http://xeusnguyen.ddns.net:50000/apiv1/robust_scanner/
 const Tech_scanner_url = 'http://xeusnguyen.ddns.net:50000/apiv1/robust_scanner/tech_scan?domain=testphp.vulnweb.com&db=True'
 
 const CVE_Report_url = 'http://xeusnguyen.ddns.net:50000/apiv1/robust_scanner/cve_search?domain=testphp.vulnweb.com&db=True'
-
+    
 const Vul_Scanner_start_url = 'http://xeusnguyen.ddns.net:50000/apiv1/robust_scanner/vul_scan?domain=testphp.vulnweb.com&sN=pen1&sS=start'
 const Vul_Scanner_status_url = 'http://xeusnguyen.ddns.net:50000/apiv1/robust_scanner/vul_scan?domain=testphp.vulnweb.com&sN=pen1&sS=status'
 const Vul_Scanner_result_url = 'http://xeusnguyen.ddns.net:50000/apiv1/robust_scanner/vul_scan?domain=testphp.vulnweb.com&sN=pen1&sS=result'
@@ -87,8 +87,35 @@ bot.on('message', async message => {
                 TechEmbed.setTimestamp();
             message.channel.send(TechEmbed);
             break;
+    case 'cvescanner':
+        let cve =  await fetch(CVE_Report_url, settings)
+                .then(res => res.json())
+                const CVEEmbed = new MessageEmbed()
+                CVEEmbed.setColor('#0099ff')
+                CVEEmbed.setTitle('Robust Scanner')
+                CVEEmbed.setDescription('CVE report')
+                if(cve['CVE report'].length > 1){
+                    for(let i = 0; i < cve['CVE report'].length; i++)
+                    {
+                        CVEEmbed.addFields(
+                            { name: "Description",  value: port['CVE report'][i][0], inline: true },
+                            { name: "ID",  value: port['CVE report'][i][1], inline: true },
+                            { name: "URL",  value: port['CVE report'][i][2], inline: true },
+                            { name: "Solution",  value: port['CVE report'][i][3], inline: true }
+                )}}
 
-
+                else{
+                    CVEEmbed.addFields(
+                        { name: "Description",  value: port['CVE report'][0][0], inline: true },
+                        { name: "ID",  value: port['CVE report'][0][1], inline: true },
+                        { name: "URL",  value: port['CVE report'][0][2], inline: true },
+                        { name: "Solution",  value: port['CVE report'][0][3], inline: true }
+            )   
+                }
+                CVEEmbed.setFooter('Xeus and G', 'https://avatars.githubusercontent.com/u/74602538?v=4')
+                CVEEmbed.setTimestamp();
+            message.channel.send(CVEEmbed);
+            break;   
         }
     
 //          const PortEmbed = new MessageEmbed()

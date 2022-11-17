@@ -8,15 +8,15 @@ const PREFIX = '!';
 
 const fetch = require('node-fetch');
  
-const Port_scanner_url = 'http://xeusnguyen.ddns.net:50000/apiv1/robust_scanner/port_scan?domain=testphp.vulnweb.com&option=default&protocol=tcp'
+const Port_scanner_url = 'http://pbl6security.ddns.net:50000/apiv1/robust_scanner/port_scan?domain=zero.webappsecurity.com&option=default&protocol=tcp'
 
-const Tech_scanner_url = 'http://xeusnguyen.ddns.net:50000/apiv1/robust_scanner/tech_scan?domain=testphp.vulnweb.com&db=True'
+const Tech_scanner_url = 'http://pbl6security.ddns.net:50000/apiv1/robust_scanner/tech_scan?domain=zero.webappsecurity.com&db=True'
 
-const CVE_Report_url = 'http://xeusnguyen.ddns.net:50000/apiv1/robust_scanner/cve_search?domain=testphp.vulnweb.com&db=True'
+const CVE_Report_url = 'http://pbl6security.ddns.net:50000/apiv1/robust_scanner/cve_search?domain=zero.webappsecurity.com&db=True'
     
-const Vul_Scanner_start_url = 'http://xeusnguyen.ddns.net:50000/apiv1/robust_scanner/vul_scan?domain=testphp.vulnweb.com&sN=pen1&sS=start'
-const Vul_Scanner_status_url = 'http://xeusnguyen.ddns.net:50000/apiv1/robust_scanner/vul_scan?domain=testphp.vulnweb.com&sN=pen1&sS=status'
-const Vul_Scanner_result_url = 'http://xeusnguyen.ddns.net:50000/apiv1/robust_scanner/vul_scan?domain=testphp.vulnweb.com&sN=pen1&sS=result'
+const Vul_Scanner_start_url = 'http://pbl6security.ddns.net:50000/apiv1/robust_scanner/vul_scan?domain=zero.webappsecurity.com&sN=pen1&sS=start'
+const Vul_Scanner_status_url = 'http://pbl6security.ddns.net:50000/apiv1/robust_scanner/vul_scan?domain=zero.webappsecurity.com&sN=pen1&sS=status'
+const Vul_Scanner_result_url = 'http://pbl6security.ddns.net:50000/apiv1/robust_scanner/vul_scan?domain=zero.webappsecurity.com&sN=pen2&sS=result'
 
 
 let settings = { method: "Get" };
@@ -94,49 +94,100 @@ bot.on('message', async message => {
                 CVEEmbed.setColor('#0099ff')
                 CVEEmbed.setTitle('Robust Scanner')
                 CVEEmbed.setDescription('CVE report')
-                if(cve['CVE report'].length > 1){
-                    for(let i = 0; i < cve['CVE report'].length; i++)
-                    {
-                        CVEEmbed.addFields(
-                            { name: "Description",  value: port['CVE report'][i][0], inline: true },
-                            { name: "ID",  value: port['CVE report'][i][1], inline: true },
-                            { name: "URL",  value: port['CVE report'][i][2], inline: true },
-                            { name: "Solution",  value: port['CVE report'][i][3], inline: true }
-                )}}
-
-                else{
+                try {
+                    if(cve['CVE report'].length > 0){
+                        for(let i = 0; i < cve['CVE report'].length; i++)
+                        {
+                            for(let j = 0; j < cve['CVE report'][i].length; j++)
+                            {
+                                    CVEEmbed.addFields(
+                                        { name: "ID",  value: cve['CVE report'][i][j][1]['ID'], inline: true },
+                                        { name: "URL",  value: cve['CVE report'][i][j][1]['URL'], inline: true },
+                                        { name: "Solution",  value: cve['CVE report'][i][j][1]['__PACKAGE'], inline: true })
+                            }
+                        }
+                    }
+                } catch (error) {
                     CVEEmbed.addFields(
-                        { name: "Description",  value: port['CVE report'][0][0], inline: true },
-                        { name: "ID",  value: port['CVE report'][0][1], inline: true },
-                        { name: "URL",  value: port['CVE report'][0][2], inline: true },
-                        { name: "Solution",  value: port['CVE report'][0][3], inline: true }
-            )   
+                        { name: "ID",  value: null, inline: true },
+                        { name: "URL",  value: null, inline: true },
+                        { name: "Solution",  value: null, inline: true })
                 }
+                CVEEmbed.setDescription('Click link on the title for getting detail')
+                CVEEmbed.setURL(CVE_Report_url)
                 CVEEmbed.setFooter('Xeus and G', 'https://avatars.githubusercontent.com/u/74602538?v=4')
                 CVEEmbed.setTimestamp();
             message.channel.send(CVEEmbed);
+            break;
+    case 'vulstart':
+                const VulStartEmbed = new MessageEmbed()
+                VulStartEmbed.setColor('#0099ff')
+                VulStartEmbed.setTitle('Robust Scanner')
+                VulStartEmbed.setDescription('Vulnerability Scan Now')
+                VulStartEmbed.setFooter('Xeus and G', 'https://avatars.githubusercontent.com/u/74602538?v=4')
+                VulStartEmbed.setTimestamp();
+            message.channel.send(VulStartEmbed);
             break;   
-        }
-    
-//          const PortEmbed = new MessageEmbed()
-//             .setColor('#0099ff')
-//             .setTitle('Robust Scanner')
-//             .setDescription('----------------------------------------')
-//             .addFields(
-//                 { name: 'Infomation Host', value: port['Infomation of Host'], inline: false },
-//                 { name: "Port",  value: port['Port report'][0][0], inline: true },
-//                 { name: "Status",  value: port['Port report'][0][1], inline: true },
-//                 { name: "Protocol",  value: port['Port report'][0][2], inline: true }
-//             )
-//             // .addField(
-//             //     { name: "Port report",  value: pen['Port report'][0], inline: true }
-//             // )
-            
-//             .setFooter('Xeus and G', 'https://avatars.githubusercontent.com/u/74602538?v=4')
-//             .setTimestamp();
-//         message.channel.send(PortEmbed);
-//    }
-// }
-
+    case 'vulstatus':
+    let vulstatus =  await fetch(Vul_Scanner_status_url, settings)
+            .then(res => res.json())
+            const VulstatusEmbed = new MessageEmbed()
+            VulstatusEmbed.setColor('#0099ff')
+            VulstatusEmbed.setTitle('Robust Scanner')
+            VulstatusEmbed.setDescription('Vulnerability Status')
+            try {
+                    for(let i = 0; i < vulstatus['vul_scanner_report'].length; i++)
+                    {
+                        VulstatusEmbed.addFields(
+                            { name: "Scanner",  value: vulstatus['vul_scanner_report'][i]['scanner'], inline: true },
+                            { name: "Status",  value: vulstatus['vul_scanner_report'][i]['status'], inline: true },
+                            { name: "------------------------------------->", value: "------------------------------------>", inline:false }
+                            )
+                    }
+            } catch (error) {
+                VulstatusEmbed.addFields(
+                    { name: "Scanner",  value: null, inline: true },
+                    { name: "Status",  value: null, inline: true })
+            }
+            VulstatusEmbed.setFooter('Xeus and G', 'https://avatars.githubusercontent.com/u/74602538?v=4')
+            VulstatusEmbed.setTimestamp();
+        message.channel.send(VulstatusEmbed);
+        break;
+    case 'vulresult':
+    let vulresult =  await fetch(Vul_Scanner_result_url, settings)
+            .then(res => res.json())
+            const VulResultEmbed = new MessageEmbed()
+            VulResultEmbed.setColor('#0099ff')
+            VulResultEmbed.setTitle('Robust Scanner')
+            VulResultEmbed.setDescription('Vulnerability Result')
+            console.log(vulresult['vul_scanner_report'][1])
+            try {
+                if(vulresult['vul_scanner_report'].length > 0){
+                    for(let i = 0; i < vulresult['vul_scanner_report'].length; i++)
+                    {
+                        VulResultEmbed.addFields(
+                            { name: "Vulnerability",  value: vulresult['vul_scanner_report'][i][1], inline: true },
+                            { name: "Risk",  value: vulresult['vul_scanner_report'][i][2], inline: true },
+                            { name: "Severity",  value: vulresult['vul_scanner_report'][i][3], inline: true },
+                            { name: "CVE-CWE-ID", value: vulresult['vul_scanner_report'][i][4],inline:true},
+                            { name: "URLs", value: vulresult['vul_scanner_report'][i][5],inline:true},
+                            { name: "Reported By", value: vulresult['vul_scanner_report'][i][8],inline:true},
+                            { name: "------------------------------------------------------------------------------------------------", value: "---------------------------------------------------------------------------------------------", inline:false}
+                            )
+                    }
+                }
+            } catch (error) {
+                VulResultEmbed.addFields(
+                    { name: "ID",  value: null, inline: true },
+                    { name: "URL",  value: null, inline: true },
+                    { name: "Solution",  value: null, inline: true })
+            }
+            VulResultEmbed.setDescription('Click link on the title for getting detail')
+            VulResultEmbed.setURL(Vul_Scanner_result_url)
+            VulResultEmbed.setFooter('Xeus and G', 'https://avatars.githubusercontent.com/u/74602538?v=4')
+            VulResultEmbed.setTimestamp();
+        message.channel.send(VulResultEmbed);
+        break;
+   }
 })
 bot.login(token);

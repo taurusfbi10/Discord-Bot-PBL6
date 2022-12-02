@@ -4,11 +4,23 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
   "author": "taurusfbi10",
   "license": "ISC",
   "dependencies": {
-    "discord.js": "^12.5.3"
+    "@discordjs/builders": "^1.3.0",
+    "ascii-table": "^0.0.9",
+    "discord.js": "^14.6.0",
+    "dotenv": "^16.0.3",
+    "fs": "^0.0.1-security",
+    "glob": "^8.0.3",
+    "http": "^0.0.1-security",
+    "url": "^0.11.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
   }
 }

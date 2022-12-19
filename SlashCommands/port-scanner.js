@@ -11,12 +11,6 @@ module.exports = {
          .setDescription('URL to scan')
          .setRequired(true)
       
-         )
-      .addStringOption(options1 => options1
-         .setName('name')
-         .setDescription('Name to scan')
-         .setRequired(true)
-      
          ),
          /**
           * @param {ChatInputCommandInteraction} interaction
@@ -25,14 +19,13 @@ module.exports = {
          async execute(interaction, client) {
             try {
                const url = interaction.options.getString('url');
-               const name = interaction.options.getString('name');
             let settings = { method: "Get" };
             
             await interaction.reply({
                content: 'Please wait...'
             })
 
-            const port = await fetch('http://192.168.43.34:50000/apiv1/robust_scanner/port_scan?domain='+url+'&option=default&protocol=tcp'+name, settings)
+            const port = await fetch('http://xeusnguyen.ddns.net:50000/apiv1/robust_scanner/port_scan?domain='+url+'&option=default&protocol=tcp', settings)
         .then(res => res.json())
 
         const PortEmbed = new EmbedBuilder()

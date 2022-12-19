@@ -33,7 +33,7 @@ module.exports = {
                content: 'Please wait...'
             })
 
-            const vulresult = await fetch('http://xeusnguyen.ddns.net:50000/apiv1/robust_scanner/vul_scan?domain='+url+'&sN='+name+'&sS=result&save=True', settings)
+            const vulresult = await fetch('http://xeusnguyen.ddns.net:50000/apiv1/robust_scanner/vul_scan?domain='+url+'&sN='+name+'&sS=result', settings)
         .then(res => res.json())
 
         const VulResultEmbed = new EmbedBuilder()

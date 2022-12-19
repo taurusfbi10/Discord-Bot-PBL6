@@ -25,7 +25,7 @@ module.exports = {
                content: 'Please wait...'
             })
 
-            const tech = await fetch('http://192.168.43.34:50000/apiv1/robust_scanner/tech_scan?domain='+url+'&db=True', settings)
+            const tech = await fetch('http://xeusnguyen.ddns.net:50000/apiv1/robust_scanner/tech_scan?domain='+url+'&db=True', settings)
         .then(res => res.json())
 
         const TechEmbed = new EmbedBuilder()
